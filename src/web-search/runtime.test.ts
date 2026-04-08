@@ -333,7 +333,12 @@ describe("web search runtime", () => {
 
   it("falls back when an auto-selected provider returns a structured error payload", async () => {
     resolveRuntimeWebSearchProvidersMock.mockReturnValue([
-      createGoogleSearchProvider({
+      createProvider({
+        pluginId: "google",
+        id: "google",
+        credentialPath: "tools.web.search.google.apiKey",
+        autoDetectOrder: 1,
+        getCredentialValue: () => "configured",
         createTool: () => ({
           description: "google",
           parameters: {},
@@ -343,7 +348,13 @@ describe("web search runtime", () => {
           }),
         }),
       }),
-      createDuckDuckGoSearchProvider(),
+      createProvider({
+        pluginId: "duckduckgo",
+        id: "duckduckgo",
+        credentialPath: "",
+        autoDetectOrder: 100,
+        requiresCredential: false,
+      }),
     ]);
 
     await expect(
